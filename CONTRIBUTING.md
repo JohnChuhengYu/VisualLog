@@ -142,5 +142,5 @@ docs: update README screenshots
 ---
 
 <div align="center">
-  <p>Built with ❤️ using Compose Multiplatform — happy hacking!</p>
+  <p>Built with ❤️ using Compose Multiplatform — happy coding!</p>
 </div>
