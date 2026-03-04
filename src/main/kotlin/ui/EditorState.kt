@@ -101,7 +101,7 @@ class EditorState(
     
     fun save(onComplete: (DayEntry, List<Sticker>) -> Unit) {
         val currentText = journalText
-        val currentStickers = stickers.toList()
+        val currentStickers = stickers.filter { it.contentPath != "LOADING" }.toList()
         val currentStrokes = strokes.toList()
         val currentMood = mood
         val currentWeather = weather

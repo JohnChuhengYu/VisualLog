@@ -483,7 +483,7 @@ fun LifeGridScreen(
                 ) {
                     StickerPickerBox(
                         onEmojiSelected = { emoji ->
-                            val newId = -(System.currentTimeMillis().toInt())
+                            val newId = -((System.currentTimeMillis() and 0x7FFFFFFF).toInt()) - 1
                             // Initialize at top-left 20% by default (Normalized)
                             bgState.stickers.add(data.Sticker(id = newId, dayEntryId = -1, x=0.2f, y=0.2f, scale=1f, rotation=0f, contentPath="emoji:$emoji", type="emoji", layer = selectedLayer))
                             selectedStickerId = newId
@@ -494,7 +494,7 @@ fun LifeGridScreen(
                             fileDialog.isVisible = true 
                             if (fileDialog.file != null) {
                                 val originalFile = java.io.File(fileDialog.directory, fileDialog.file)
-                                val newId = -(System.currentTimeMillis().toInt())
+                                val newId = -((System.currentTimeMillis() and 0x7FFFFFFF).toInt()) - 1
                                 // Initialize at top-left 20% by default (Normalized)
                                 bgState.stickers.add(data.Sticker(id = newId, dayEntryId = -1, x=0.2f, y=0.2f, scale=1f, rotation=0f, contentPath="LOADING", type="image", layer = selectedLayer))
                                 selectedStickerId = newId
@@ -519,7 +519,7 @@ fun LifeGridScreen(
                             }
                         },
                         onRecentSelected = { path ->
-                            val newId = -(System.currentTimeMillis().toInt())
+                            val newId = -((System.currentTimeMillis() and 0x7FFFFFFF).toInt()) - 1
                             bgState.stickers.add(data.Sticker(id = newId, dayEntryId = -1, x=0.2f, y=0.2f, scale=1f, rotation=0f, contentPath=path, type="image", layer = selectedLayer))
                             selectedStickerId = newId
                             bgEditMode = WhiteboardMode.STICKER

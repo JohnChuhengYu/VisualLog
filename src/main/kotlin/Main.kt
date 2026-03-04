@@ -171,8 +171,8 @@ fun App(
                                         }
                                     }
                                     
-                                    // 2. Insert/Update stickers
-                                    stickers.forEach { s ->
+                                    // 2. Insert/Update stickers (skip incomplete photo imports)
+                                    stickers.filter { it.contentPath != "LOADING" }.forEach { s ->
                                         if (s.id < 0) {
                                             repository.addSticker(savedEntry.id, s.x, s.y, s.scale, s.rotation, s.contentPath, s.type, s.layer)
                                         } else {

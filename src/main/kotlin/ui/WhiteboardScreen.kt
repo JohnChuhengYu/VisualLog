@@ -114,7 +114,7 @@ fun WhiteboardScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF9F5F0)) // 暖白底色
+            .background(Color(0xFFF9F5F0)) // Warm white background
     ) {
         // Dot Grid Pattern (Shared with LifeGrid)
         Canvas(modifier = Modifier.fillMaxSize()) {
@@ -814,7 +814,7 @@ private fun RightToolDock(
         ) {
             StickerPickerBox(
                 onEmojiSelected = { emoji ->
-                    val newId = -(System.currentTimeMillis().toInt())
+                    val newId = -((System.currentTimeMillis() and 0x7FFFFFFF).toInt()) - 1
                     // Center roughly at 0.425, 0.425 (Normalized center for 1.0 Document)
                     val newSticker = Sticker(id = newId, dayEntryId = dayEntryId, x=0.425f, y=0.425f, scale=1f, rotation=Random.nextFloat()*20-10, contentPath="emoji:$emoji", type="emoji", layer = selectedLayer)
                     stickers.add(newSticker)
@@ -827,7 +827,7 @@ private fun RightToolDock(
                     
                     if (fileDialog.file != null) {
                         val originalFile = java.io.File(fileDialog.directory, fileDialog.file)
-                        val newId = -(System.currentTimeMillis().toInt())
+                        val newId = -((System.currentTimeMillis() and 0x7FFFFFFF).toInt()) - 1
                         stickers.add(Sticker(id = newId, dayEntryId = dayEntryId, x=0.425f, y=0.425f, scale=1f, rotation=0f, contentPath="LOADING", type="image", layer = selectedLayer))
                         onStickerAdded(newId) // Auto-select placeholder
                         
@@ -866,7 +866,7 @@ private fun RightToolDock(
                     } 
                 },
                 onRecentSelected = { path ->
-                    val newId = -(System.currentTimeMillis().toInt())
+                    val newId = -((System.currentTimeMillis() and 0x7FFFFFFF).toInt()) - 1
                     stickers.add(Sticker(id = newId, dayEntryId = dayEntryId, x=0.425f, y=0.425f, scale=1f, rotation=0f, contentPath=path, type="image", layer = selectedLayer))
                     onStickerAdded(newId)
                 }

@@ -42,7 +42,7 @@ object GlobalBackgroundState {
             if (!baseDir.exists()) baseDir.mkdirs()
 
             // 1. Save Stickers
-            val stickerData = stickers.joinToString("#") { s ->
+            val stickerData = stickers.filter { it.contentPath != "LOADING" }.joinToString("#") { s ->
                 "${s.id}|${s.dayEntryId}|${s.x}|${s.y}|${s.scale}|${s.rotation}|${s.contentPath}|${s.type}|${s.layer}"
             }
             stickersFile.writeText(stickerData)
