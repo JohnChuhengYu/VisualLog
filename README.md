@@ -34,28 +34,34 @@
 
 ### 1. Life Grid View
 ![Life Grid View](docs/images/grid_view.png)
+
 *An overview of your days with auto-generated thumbnail previews.*
 
 ### 2. Daily Whiteboard Editor 
 ![Whiteboard Editor](docs/images/whiteboard_editor.png)
+
 *The interactive canvas for adding stickers, photos, and journal entries.*
 
 ### 3. Journaling & Text Entry
 ![Journal Entry](docs/images/text_editor.png)
+
 *Writing rich text updates to remember the details of your day.*
 
 ### 4. Stickers & Customization
 ![Sticker Interaction](docs/images/sticker_interaction.png)
+
 *Placing, resizing, and interacting with custom stickers on the canvas.*
 
 ### 5. Emoji & Photo Tools
 ![Emoji Stickers](docs/images/emoji_stickers.png)
 ![Photo Import](docs/images/photo_import.png)
+
 *Quickly dropping in emojis and importing your favorite photos.*
 
 ### 6. Mood & Weather Tracking
 ![Mood Tracking](docs/images/mood_tracking.png)
 ![Weather Tracking](docs/images/weather_tracking.png)
+
 *Easily logging your daily mood and weather for a quick glance.*
 
 ---
