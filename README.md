@@ -66,7 +66,7 @@
 
 ---
 
-## � Supported Platforms
+## 💻 Supported Platforms
 
 VisualLog is a **Desktop Application** built using Compose Multiplatform. It is designed to run natively on major operating systems:
 
@@ -78,7 +78,7 @@ VisualLog is a **Desktop Application** built using Compose Multiplatform. It is 
 
 ---
 
-## �🚀 Getting Started (Installation & Build)
+## 🚀 Getting Started (Installation & Build)
 
 ### Prerequisites
 To run or build the application from source, you must have the Java Development Kit installed:
