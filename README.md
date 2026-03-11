@@ -11,6 +11,8 @@
   </p>
 </div>
 
+> **⚠️ Disclaimer:** I am currently a student, so I may not be able to frequently maintain or update this code during my studies. If you encounter any issues, please let me know, and I will do my absolute best to fix them!
+
 ---
 
 ## 🌟 Features
