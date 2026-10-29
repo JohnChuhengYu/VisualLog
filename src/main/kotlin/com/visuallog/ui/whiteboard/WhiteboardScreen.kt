@@ -44,7 +44,7 @@ fun WhiteboardScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF9F5F0))
+            .background(Color(0xFFEDE7DC))
     ) {
         // Dot Grid Pattern
         Canvas(modifier = Modifier.fillMaxSize()) {
@@ -54,7 +54,7 @@ fun WhiteboardScreen(
             for (x in 0..size.width.toInt() step step.toInt()) {
                 for (y in 0..size.height.toInt() step step.toInt()) {
                     drawCircle(
-                        color = Color(0xFFE0D8CC),
+                        color = Color(0xFFD0C6B6),
                         radius = radius,
                         center = Offset(x.toFloat(), y.toFloat())
                     )

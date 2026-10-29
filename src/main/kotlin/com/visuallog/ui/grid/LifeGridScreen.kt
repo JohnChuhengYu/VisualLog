@@ -93,7 +93,7 @@ fun LifeGridScreen(
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFFF9F5F0)) 
+            .background(Color(0xFFEDE7DC)) 
     ) {
         val isNarrow = maxWidth < 600.dp
         
@@ -105,7 +105,7 @@ fun LifeGridScreen(
             for (x in 0..size.width.toInt() step step.toInt()) {
                 for (y in 0..size.height.toInt() step step.toInt()) {
                     drawCircle(
-                        color = Color(0xFFE0D8CC),
+                        color = Color(0xFFD0C6B6),
                         radius = radius,
                         center = Offset(x.toFloat(), y.toFloat())
                     )

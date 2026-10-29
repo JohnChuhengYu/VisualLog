@@ -103,11 +103,13 @@ fun LifeDayCell(
             }
             .rotate(rotation)
             .shadow(
-                elevation = 8.dp,
-                shape = RoundedCornerShape(1.dp),
-                spotColor = Color(0xFF1A1A1A).copy(alpha = 0.25f)
+                elevation = 10.dp,
+                shape = RoundedCornerShape(2.dp),
+                spotColor = Color(0x35352515),
+                ambientColor = Color(0x20352515)
             )
-            .background(Color.White)
+            .background(Color.White, RoundedCornerShape(2.dp))
+            .border(1.dp, Color(0xFFDCD4C6), RoundedCornerShape(2.dp))
             .alphaClickable(onClick = { onClick(centerPos, itemSize) })
     ) {
         // 1. Image Area
@@ -120,11 +122,11 @@ fun LifeDayCell(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
-                        Color(0xFFF5EFE6),
+                        Color(0xFFFFFDF9),
                         shape = RoundedCornerShape(1.dp)
                     )
                     .clip(RoundedCornerShape(1.dp))
-                    .border(1.dp, Color(0xFFD6CDC0))
+                    .border(0.5.dp, Color(0xFFE0E0E0))
             ) {
                 val currentInfo = thumbnailInfo
                 if (currentInfo != null) {

@@ -47,16 +47,16 @@ fun VisualCanvasPage(
         LaunchedEffect(constraints.maxWidth, constraints.maxHeight) {
             val winW = constraints.maxWidth.toFloat()
             val winH = constraints.maxHeight.toFloat()
+            val paperSize = 1.0f
             
-            // Total Polaroid card bounds (film is 0..1, outer card has borders & chin)
-            val cardW = 1.11f
-            val cardH = 1.255f
-            val fitScale = min(winW / cardW, winH / cardH) * 0.88f
+            val scaleX = winW / paperSize
+            val scaleY = winH / paperSize
+            val fitScale = min(scaleX, scaleY) * 0.95f
             
             viewport.scale = fitScale
             viewport.offset = Offset(
-                winW / 2f - 0.5f * fitScale,
-                winH / 2f - 0.5725f * fitScale
+                (winW - paperSize * fitScale) / 2f,
+                (winH - paperSize * fitScale) / 2f
             )
         }
 
@@ -65,65 +65,30 @@ fun VisualCanvasPage(
         val vScale = viewport.scale
         val vOffset = viewport.offset
         
-        // 1. POLAROID CARD & FILM PAPER
+        // 1. PAPER (Original Clean White Paper)
         Canvas(modifier = Modifier.fillMaxSize()) {
             translate(vOffset.x, vOffset.y) {
                 scale(vScale, pivot = Offset.Zero) {
-                    // A. Polaroid Card Outer Drop Shadow
-                    drawRoundRect(
-                        color = Color.Black.copy(alpha = 0.16f),
-                        topLeft = Offset(-0.052f, -0.045f),
-                        size = androidx.compose.ui.geometry.Size(1.11f, 1.255f),
-                        cornerRadius = CornerRadius(0.012f, 0.012f)
-                    )
-                    drawRoundRect(
-                        color = Color.Black.copy(alpha = 0.07f),
-                        topLeft = Offset(-0.048f, -0.038f),
-                        size = androidx.compose.ui.geometry.Size(1.11f, 1.255f),
-                        cornerRadius = CornerRadius(0.018f, 0.018f)
-                    )
-                    
-                    // B. Crisp White Polaroid Paper Frame (#FFFFFF)
-                    drawRoundRect(
-                        color = Color.White,
-                        topLeft = Offset(-0.055f, -0.055f),
-                        size = androidx.compose.ui.geometry.Size(1.11f, 1.255f),
-                        cornerRadius = CornerRadius(0.010f, 0.010f),
-                        style = androidx.compose.ui.graphics.drawscope.Fill
-                    )
-                    drawRoundRect(
-                        color = Color(0xFFE5DFD5),
-                        topLeft = Offset(-0.055f, -0.055f),
-                        size = androidx.compose.ui.geometry.Size(1.11f, 1.255f),
-                        cornerRadius = CornerRadius(0.010f, 0.010f),
-                        style = androidx.compose.ui.graphics.drawscope.Stroke(width = 0.0012f)
-                    )
-                    
-                    // C. Inner Film Emulsion Background (#F5EFE6)
-                    drawRect(
-                        color = Color(0xFFF5EFE6),
-                        topLeft = Offset.Zero,
+                     drawRoundRect(
+                         color = Color(0xFF8B8B8B).copy(alpha = 0.15f),
+                         topLeft = Offset(0.004f, 0.008f),
+                         size = androidx.compose.ui.geometry.Size(1.0f, 1.0f),
+                         cornerRadius = CornerRadius(0.002f, 0.002f)
+                     )
+                     
+                     drawRoundRect(
+                        color = Color(0xFFFFFDF7), 
                         size = androidx.compose.ui.geometry.Size(1.0f, 1.0f),
+                        cornerRadius = CornerRadius(0.002f, 0.002f),
                         style = androidx.compose.ui.graphics.drawscope.Fill
-                    )
-                    // D. Tactile Die-cut Inset Bezel (#D0C6B6)
-                    drawRect(
-                        color = Color(0xFFD0C6B6),
-                        topLeft = Offset.Zero,
+                     )
+                     
+                     drawRoundRect(
+                        color = Color(0xFFE0E0E0), 
                         size = androidx.compose.ui.geometry.Size(1.0f, 1.0f),
-                        style = androidx.compose.ui.graphics.drawscope.Stroke(width = 0.0022f)
-                    )
-                    // E. Top & Left Inset Shadow (Physical cutout depth)
-                    drawRect(
-                        color = Color.Black.copy(alpha = 0.06f),
-                        topLeft = Offset.Zero,
-                        size = androidx.compose.ui.geometry.Size(1.0f, 0.008f)
-                    )
-                    drawRect(
-                        color = Color.Black.copy(alpha = 0.05f),
-                        topLeft = Offset.Zero,
-                        size = androidx.compose.ui.geometry.Size(0.008f, 1.0f)
-                    )
+                        cornerRadius = CornerRadius(0.002f, 0.002f),
+                        style = androidx.compose.ui.graphics.drawscope.Stroke(width = 0.001f)
+                     )
                 }
             }
         }

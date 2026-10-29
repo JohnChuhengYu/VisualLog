@@ -44,12 +44,12 @@ object PolaroidCardExporter {
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR)
         g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY)
 
-        // 1. Warm Neutral Studio Background (#F4F1EA)
-        g.color = java.awt.Color(0xF4, 0xF0, 0xE8)
+        // 1. Warm Vintage Studio Desk Background (#EAE4D8 - Rich Contrast with White Card)
+        g.color = java.awt.Color(0xEA, 0xE4, 0xD8)
         g.fillRect(0, 0, CARD_WIDTH, CARD_HEIGHT)
 
-        // Subtle background dot pattern
-        g.color = java.awt.Color(0xDF, 0xD9, 0xCE)
+        // Dot pattern on desk
+        g.color = java.awt.Color(0xD0, 0xC6, 0xB6)
         val dotSpacing = 36
         for (x in 0 until CARD_WIDTH step dotSpacing) {
             for (y in 0 until CARD_HEIGHT step dotSpacing) {
@@ -64,27 +64,39 @@ object PolaroidCardExporter {
         val cardH = CARD_HEIGHT - (cardMarginY * 2) // 1300
         val cardCorner = 16f
 
-        // Soft Diffuse Drop Shadow
-        g.color = java.awt.Color(0, 0, 0, 25)
+        // Multi-Layer Realistic Physical Drop Shadow
+        // 1) Soft outer diffuse shadow
+        g.color = java.awt.Color(35, 25, 15, 15)
+        g.fill(RoundRectangle2D.Float(
+            cardMarginX.toFloat() + 6f, 
+            cardMarginY.toFloat() + 22f, 
+            cardW.toFloat(), 
+            cardH.toFloat(), 
+            cardCorner + 6f, 
+            cardCorner + 6f
+        ))
+        // 2) Middle ambient shadow
+        g.color = java.awt.Color(35, 25, 15, 26)
         g.fill(RoundRectangle2D.Float(
             cardMarginX.toFloat() + 4f, 
-            cardMarginY.toFloat() + 10f, 
+            cardMarginY.toFloat() + 14f, 
+            cardW.toFloat(), 
+            cardH.toFloat(), 
+            cardCorner + 2f, 
+            cardCorner + 2f
+        ))
+        // 3) Deep contact shadow
+        g.color = java.awt.Color(35, 25, 15, 42)
+        g.fill(RoundRectangle2D.Float(
+            cardMarginX.toFloat() + 2f, 
+            cardMarginY.toFloat() + 6f, 
             cardW.toFloat(), 
             cardH.toFloat(), 
             cardCorner, 
             cardCorner
         ))
-        g.color = java.awt.Color(0, 0, 0, 15)
-        g.fill(RoundRectangle2D.Float(
-            cardMarginX.toFloat() + 8f, 
-            cardMarginY.toFloat() + 18f, 
-            cardW.toFloat(), 
-            cardH.toFloat(), 
-            cardCorner + 4f, 
-            cardCorner + 4f
-        ))
 
-        // White Paper Card
+        // Crisp White Cardstock (#FFFFFF)
         g.color = java.awt.Color.WHITE
         g.fill(RoundRectangle2D.Float(
             cardMarginX.toFloat(), 
@@ -95,9 +107,9 @@ object PolaroidCardExporter {
             cardCorner
         ))
 
-        // Subtle Card Border Line
-        g.color = java.awt.Color(0xEA, 0xE7, 0xE1)
-        g.stroke = BasicStroke(1.5f)
+        // Clearly Defined Card Outline Border (#D5CDBE)
+        g.color = java.awt.Color(0xD5, 0xCD, 0xBE)
+        g.stroke = BasicStroke(2.0f)
         g.draw(RoundRectangle2D.Float(
             cardMarginX.toFloat(), 
             cardMarginY.toFloat(), 
@@ -113,9 +125,12 @@ object PolaroidCardExporter {
         val photoY = cardMarginY + photoPadding
         val photoSize = cardW - (photoPadding * 2) // 848 x 848 (Square Polaroid Canvas)
 
-        // Photo Paper Background (Warm Retro Emulsion #F5EFE6)
-        g.color = java.awt.Color(0xF5, 0xEF, 0xE6)
+        // Clean White Photo Paper Background
+        g.color = java.awt.Color(0xFF, 0xFD, 0xF9)
         g.fillRect(photoX, photoY, photoSize, photoSize)
+        g.color = java.awt.Color(0xEE, 0xEA, 0xE2)
+        g.stroke = BasicStroke(1.0f)
+        g.drawRect(photoX, photoY, photoSize, photoSize)
 
         // Draw Content Image (From rendered thumbnail or freshly baked buffer)
         var contentImg: BufferedImage? = null
@@ -169,26 +184,6 @@ object PolaroidCardExporter {
         if (contentImg != null) {
             g.drawImage(contentImg, photoX, photoY, photoSize, photoSize, null)
         }
-
-        // Tactile Die-cut Inset Bezel & Recessed Shadow (Clearly separates film from white frame)
-        // 1. Defined Die-cut Bezel Line
-        g.color = java.awt.Color(0xD0, 0xC6, 0xB6)
-        g.stroke = BasicStroke(2.5f)
-        g.drawRect(photoX, photoY, photoSize, photoSize)
-
-        // 2. Realistic Top & Left Inner Shadow (Simulates physical cardboard cutout depth)
-        for (i in 0 until 10) {
-            val alpha = ((10 - i) * 3).coerceIn(0, 255)
-            g.color = java.awt.Color(35, 25, 15, alpha)
-            g.fillRect(photoX, photoY + i, photoSize, 1)
-            g.fillRect(photoX + i, photoY, 1, photoSize)
-        }
-
-        // 3. Subtle bottom & right inner highlight
-        g.color = java.awt.Color(255, 255, 255, 130)
-        g.stroke = BasicStroke(1.2f)
-        g.drawLine(photoX, photoY + photoSize, photoX + photoSize, photoY + photoSize)
-        g.drawLine(photoX + photoSize, photoY, photoX + photoSize, photoY + photoSize)
 
         // 4. Weekday Tape Sticker (Top-Right of Photo)
         val dateObj = try { LocalDate.parse(dayEntry.date) } catch (e: Exception) { LocalDate.now() }
