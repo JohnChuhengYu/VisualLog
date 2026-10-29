@@ -43,12 +43,36 @@ jobs:
           java-version: '18'
           cache: 'gradle'
 
+      - name: Setup WiX Toolset v3 (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $wixDir = "$env:RUNNER_TEMP\wix3"
+          New-Item -ItemType Directory -Force -Path $wixDir | Out-Null
+          Invoke-WebRequest -Uri "https://github.com/wixtoolset/wix3/releases/download/wix3141rtm/wix314-binaries.zip" -OutFile "$env:RUNNER_TEMP\wix3.zip"
+          Expand-Archive -Path "$env:RUNNER_TEMP\wix3.zip" -DestinationPath $wixDir
+          Remove-Item "$env:RUNNER_TEMP\wix3.zip"
+          echo $wixDir >> $env:GITHUB_PATH
+
       - name: Grant execute permission for gradlew
         if: runner.os != 'Windows'
         run: chmod +x gradlew
 
-      - name: Package Desktop App
-        run: ./gradlew ${{ matrix.task }}
+      - name: Package Desktop App (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: .\gradlew.bat ${{ matrix.task }} --info --stacktrace
+
+      - name: Package Desktop App (macOS & Linux)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: ./gradlew ${{ matrix.task }} --info --stacktrace
+
+      - name: Inspect generated artifacts
+        shell: bash
+        run: |
+          echo "=== Content of build/compose/binaries/main ==="
+          ls -R build/compose/binaries/main/ || true
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
