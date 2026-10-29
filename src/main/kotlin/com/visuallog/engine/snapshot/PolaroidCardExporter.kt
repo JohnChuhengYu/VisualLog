@@ -249,6 +249,11 @@ object PolaroidCardExporter {
         Toolkit.getDefaultToolkit().systemClipboard.setContents(transferable, null)
     }
 
+    data class ExportCardResult(
+        val image: BufferedImage,
+        val file: File?
+    )
+
     /**
      * Prompts the user with a native Save File Dialog and saves the image to disk.
      * Also automatically copies the card to the clipboard.
@@ -258,7 +263,7 @@ object PolaroidCardExporter {
         layerManager: LayerManager? = null,
         strokes: List<Stroke> = emptyList(),
         stickers: List<Sticker> = emptyList()
-    ): File? {
+    ): ExportCardResult {
         return withContext(Dispatchers.IO) {
             val cardImage = createCardImage(
                 dayEntry = dayEntry,
@@ -277,26 +282,61 @@ object PolaroidCardExporter {
 
             // 2. Open Save File Dialog
             val defaultFileName = "VisualLog_${dayEntry.date}.png"
-            val fileDialog = FileDialog(null as Frame?, "Export Polaroid Card", FileDialog.SAVE).apply {
-                file = defaultFileName
-                setFilenameFilter { _, name -> name.lowercase().endsWith(".png") }
-            }
-            fileDialog.isVisible = true
+            val file = saveCardImageWithDialog(cardImage, defaultFileName)
+            ExportCardResult(cardImage, file)
+        }
+    }
 
-            val selectedFile = fileDialog.file
-            val selectedDir = fileDialog.directory
+    /**
+     * Prompts the user with a native Save File Dialog and writes the image to disk.
+     */
+    fun saveCardImageWithDialog(cardImage: BufferedImage, defaultFileName: String): File? {
+        val fileDialog = FileDialog(null as Frame?, "Export Polaroid Card", FileDialog.SAVE).apply {
+            file = defaultFileName
+            setFilenameFilter { _, name -> name.lowercase().endsWith(".png") }
+        }
+        fileDialog.isVisible = true
 
-            if (selectedFile != null && selectedDir != null) {
-                val destFile = if (selectedFile.endsWith(".png", ignoreCase = true)) {
-                    File(selectedDir, selectedFile)
-                } else {
-                    File(selectedDir, "$selectedFile.png")
-                }
-                ImageIO.write(cardImage, "png", destFile)
-                destFile
+        val selectedFile = fileDialog.file
+        val selectedDir = fileDialog.directory
+
+        return if (selectedFile != null && selectedDir != null) {
+            val destFile = if (selectedFile.endsWith(".png", ignoreCase = true)) {
+                File(selectedDir, selectedFile)
             } else {
-                null
+                File(selectedDir, "$selectedFile.png")
             }
+            ImageIO.write(cardImage, "png", destFile)
+            destFile
+        } else {
+            null
+        }
+    }
+
+    /**
+     * Reveals the file in macOS Finder or Windows Explorer.
+     */
+    fun revealInFileManager(file: File) {
+        try {
+            if (Desktop.isDesktopSupported()) {
+                val desktop = Desktop.getDesktop()
+                if (desktop.isSupported(Desktop.Action.BROWSE_FILE_DIR)) {
+                    desktop.browseFileDirectory(file)
+                    return
+                }
+                if (file.parentFile != null && desktop.isSupported(Desktop.Action.OPEN)) {
+                    desktop.open(file.parentFile)
+                    return
+                }
+            }
+            val os = System.getProperty("os.name").lowercase()
+            if (os.contains("mac")) {
+                Runtime.getRuntime().exec(arrayOf("open", "-R", file.absolutePath))
+            } else if (os.contains("windows")) {
+                Runtime.getRuntime().exec(arrayOf("explorer.exe", "/select,", file.absolutePath))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

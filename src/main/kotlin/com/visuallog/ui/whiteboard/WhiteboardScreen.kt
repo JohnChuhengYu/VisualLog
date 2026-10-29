@@ -6,9 +6,6 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -106,20 +103,7 @@ fun WhiteboardScreen(
         }
 
         // B. FLOATING HEADER
-        var exportDialogMessage by remember { mutableStateOf<String?>(null) }
-
-        if (exportDialogMessage != null) {
-            AlertDialog(
-                onDismissRequest = { exportDialogMessage = null },
-                title = { Text("📸 Polaroid Card Exported") },
-                text = { Text(exportDialogMessage!!) },
-                confirmButton = {
-                    Button(onClick = { exportDialogMessage = null }) {
-                        Text("Got it")
-                    }
-                }
-            )
-        }
+        var exportResult by remember { mutableStateOf<PolaroidCardExporter.ExportCardResult?>(null) }
 
         FloatingHeader(
             onBack = onBack,
@@ -129,7 +113,7 @@ fun WhiteboardScreen(
             },
             onExport = {
                 scope.launch {
-                    val file = PolaroidCardExporter.exportCardWithDialog(
+                    val result = PolaroidCardExporter.exportCardWithDialog(
                         dayEntry = editorState.dayEntry.copy(
                             journalText = journalText,
                             mood = editorState.mood,
@@ -139,11 +123,7 @@ fun WhiteboardScreen(
                         strokes = editorState.strokes.toList(),
                         stickers = editorState.stickers.toList()
                     )
-                    exportDialogMessage = if (file != null) {
-                        "Polaroid card exported to:\n${file.absolutePath}\n\n✨ Also copied to your clipboard ready to paste into chat or social media!"
-                    } else {
-                        "✨ Polaroid card copied to your clipboard ready to paste into chat or social media!"
-                    }
+                    exportResult = result
                 }
             }
         )
@@ -196,6 +176,17 @@ fun WhiteboardScreen(
                     selectedLayer = newLayer
                 },
                 modifier = Modifier.align(Alignment.TopEnd).padding(top = 96.dp, end = 24.dp, bottom = 24.dp)
+            )
+        }
+
+        // E. POLAROID EXPORT MODAL
+        val currentExport = exportResult
+        if (currentExport != null) {
+            PolaroidExportModal(
+                cardImage = currentExport.image,
+                initialFile = currentExport.file,
+                defaultFileName = "VisualLog_${editorState.dayEntry.date}.png",
+                onDismiss = { exportResult = null }
             )
         }
     }
