@@ -113,11 +113,9 @@ object PolaroidCardExporter {
         val photoY = cardMarginY + photoPadding
         val photoSize = cardW - (photoPadding * 2) // 848 x 848 (Square Polaroid Canvas)
 
-        // Photo Paper Background (#FFFDF7)
-        g.color = java.awt.Color(0xFF, 0xFD, 0xF7)
+        // Photo Paper Background (Warm Retro Emulsion #F5EFE6)
+        g.color = java.awt.Color(0xF5, 0xEF, 0xE6)
         g.fillRect(photoX, photoY, photoSize, photoSize)
-        g.color = java.awt.Color(0xEB, 0xE6, 0xDD)
-        g.drawRect(photoX, photoY, photoSize, photoSize)
 
         // Draw Content Image (From rendered thumbnail or freshly baked buffer)
         var contentImg: BufferedImage? = null
@@ -171,6 +169,26 @@ object PolaroidCardExporter {
         if (contentImg != null) {
             g.drawImage(contentImg, photoX, photoY, photoSize, photoSize, null)
         }
+
+        // Tactile Die-cut Inset Bezel & Recessed Shadow (Clearly separates film from white frame)
+        // 1. Defined Die-cut Bezel Line
+        g.color = java.awt.Color(0xD0, 0xC6, 0xB6)
+        g.stroke = BasicStroke(2.5f)
+        g.drawRect(photoX, photoY, photoSize, photoSize)
+
+        // 2. Realistic Top & Left Inner Shadow (Simulates physical cardboard cutout depth)
+        for (i in 0 until 10) {
+            val alpha = ((10 - i) * 3).coerceIn(0, 255)
+            g.color = java.awt.Color(35, 25, 15, alpha)
+            g.fillRect(photoX, photoY + i, photoSize, 1)
+            g.fillRect(photoX + i, photoY, 1, photoSize)
+        }
+
+        // 3. Subtle bottom & right inner highlight
+        g.color = java.awt.Color(255, 255, 255, 130)
+        g.stroke = BasicStroke(1.2f)
+        g.drawLine(photoX, photoY + photoSize, photoX + photoSize, photoY + photoSize)
+        g.drawLine(photoX + photoSize, photoY, photoX + photoSize, photoY + photoSize)
 
         // 4. Weekday Tape Sticker (Top-Right of Photo)
         val dateObj = try { LocalDate.parse(dayEntry.date) } catch (e: Exception) { LocalDate.now() }

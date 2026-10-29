@@ -146,8 +146,8 @@ class LayerManager {
             strokeJoin = StrokeJoin.Round
         }
 
-        // 1. Clear Background (White)
-        val bgPaint = Paint().apply { color = Color.White }
+        // 1. Clear Background (Warm Retro Polaroid Emulsion #F5EFE6)
+        val bgPaint = Paint().apply { color = Color(0xFFF5EFE6) }
         outCanvas.drawRect(0f, 0f, LISTEN_DIMENSION.toFloat(), LISTEN_DIMENSION.toFloat(), bgPaint)
 
         // Setup Pad Transform parameters

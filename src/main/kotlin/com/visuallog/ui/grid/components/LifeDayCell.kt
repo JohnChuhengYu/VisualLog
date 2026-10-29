@@ -120,11 +120,11 @@ fun LifeDayCell(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
-                        Color(0xFFFFFDF9),
+                        Color(0xFFF5EFE6),
                         shape = RoundedCornerShape(1.dp)
                     )
                     .clip(RoundedCornerShape(1.dp))
-                    .border(0.5.dp, Color(0xFFE0E0E0))
+                    .border(1.dp, Color(0xFFD6CDC0))
             ) {
                 val currentInfo = thumbnailInfo
                 if (currentInfo != null) {
