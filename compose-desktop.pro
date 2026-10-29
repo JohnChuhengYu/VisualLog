@@ -1,4 +1,4 @@
-# 忽略第三方库中不影响运行的警告
+# Ignore third-party library warnings that do not affect execution
 -dontwarn kotlinx.serialization.**
 -dontwarn kotlinx.datetime.**
 -dontwarn org.jetbrains.exposed.**
@@ -6,16 +6,16 @@
 -dontwarn java.lang.instrument.**
 -dontwarn sun.misc.Unsafe
 
-# 保留数据库和反射相关的类，防止被混淆导致运行报错
+# Retain database and reflection related classes to prevent obfuscation execution errors
 -keep class org.jetbrains.exposed.** { *; }
 -keep class org.xerial.sqlite.** { *; }
 -keep class org.sqlite.** { *; }
 
-# 保留项目主逻辑类
+# Retain project main logic classes
 -keep class com.visuallog.** { *; }
--keep class MainKt { *; }
+-keep class com.visuallog.MainKt { *; }
 
-# 保持协程的 ServiceLoader 配置，防止 Main 调度器初始化失败
+# Retain coroutine ServiceLoader configuration to prevent Main dispatcher initialization failure
 -keep class kotlinx.coroutines.internal.MainDispatcherFactory { *; }
 -keep class kotlinx.coroutines.swing.SwingDispatcherFactory { *; }
 -keep class kotlinx.coroutines.android.AndroidDispatcherFactory { *; }

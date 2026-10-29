@@ -40,7 +40,7 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "MainKt"
+        mainClass = "com.visuallog.MainKt"
         jvmArgs += listOf(
             "-Xmx2G",
             "-Dskiko.renderApi=METAL"
