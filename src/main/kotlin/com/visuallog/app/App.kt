@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import com.visuallog.data.model.DayEntry
 import com.visuallog.data.repository.VisualLogRepository
 import com.visuallog.data.service.ThumbnailMigrator
+import com.visuallog.i18n.LanguageManager
 import com.visuallog.ui.grid.GlobalBackgroundState
 import com.visuallog.ui.grid.LifeGridScreen
 import com.visuallog.ui.whiteboard.WhiteboardScreen
@@ -43,6 +44,7 @@ fun App(
 
         // Load initialization date and timeline entries
         LaunchedEffect(forceReloadTrigger) {
+            LanguageManager.init(repository)
             withContext(Dispatchers.IO) {
                 ThumbnailMigrator.migrateIfNeeded(repository)
             }

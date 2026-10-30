@@ -38,6 +38,8 @@ import com.visuallog.data.repository.RecentStickerManager
 import com.visuallog.engine.optimization.ImageOptimizationUtils
 import com.visuallog.engine.spatial.GeometryUtils
 import com.visuallog.engine.stroke.RawPoint
+import com.visuallog.i18n.S
+import com.visuallog.ui.common.LanguageSwitchButton
 import com.visuallog.ui.common.ToolIcon
 import com.visuallog.ui.common.WhiteboardMode
 import com.visuallog.ui.common.WhiteboardTool
@@ -413,6 +415,18 @@ fun LifeGridScreen(
             }
         }
 
+        // --- LAYER 3B: FLOATING LANGUAGE SWITCHER ---
+        if (!isEditBackgroundMode) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(end = 28.dp, top = 28.dp),
+                contentAlignment = Alignment.TopEnd
+            ) {
+                LanguageSwitchButton()
+            }
+        }
+
         // --- LAYER 4: BACKGROUND EDIT CONTROLS ---
         if (isEditBackgroundMode) {
              Box(
@@ -509,7 +523,7 @@ fun LifeGridScreen(
                          // 1. PEN
                          ToolIcon(
                              icon = Icons.Default.Edit,
-                             label = "Pen",
+                             label = S.pen,
                              isActive = bgEditMode == WhiteboardMode.DRAW && bgState.currentTool == WhiteboardTool.PEN,
                              activeColor = bgState.currentStrokeColor,
                              onClick = { 
@@ -526,7 +540,7 @@ fun LifeGridScreen(
                                  ColorPalette(bgState.currentStrokeColor) { bgState.currentStrokeColor = it }
                                  
                                  Spacer(Modifier.height(4.dp))
-                                 Text("Size", style = MaterialTheme.typography.labelSmall, color = Color(0xFF8D6E63))
+                                 Text(S.size, style = MaterialTheme.typography.labelSmall, color = Color(0xFF8D6E63))
                                  BrushSizeSelector(
                                      currentWidth = bgState.currentStrokeWidth * 1000f,
                                      onWidthChange = { 
@@ -541,7 +555,7 @@ fun LifeGridScreen(
                          // Layers
                          HorizontalDivider(modifier = Modifier.width(32.dp))
                          Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                             Text("Layer", style = MaterialTheme.typography.labelSmall, color = Color(0xFF8D6E63))
+                             Text(S.layer, style = MaterialTheme.typography.labelSmall, color = Color(0xFF8D6E63))
                              Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                                  (0..2).forEach { id ->
                                      Box(
@@ -567,7 +581,7 @@ fun LifeGridScreen(
                          // 2. ERASER
                          ToolIcon(
                              icon = Icons.Default.AutoFixHigh,
-                             label = "Eraser",
+                             label = S.eraser,
                              isActive = bgEditMode == WhiteboardMode.DRAW && bgState.currentTool == WhiteboardTool.ERASER,
                              onClick = { 
                                  bgEditMode = WhiteboardMode.DRAW
@@ -580,7 +594,7 @@ fun LifeGridScreen(
                          // 3. SWEEP (SEGMENT ERASER)
                          ToolIcon(
                              icon = Icons.Default.DeleteSweep,
-                             label = "Sweep",
+                             label = S.sweep,
                              isActive = bgEditMode == WhiteboardMode.DRAW && bgState.currentTool == WhiteboardTool.SEGMENT_ERASER,
                              activeColor = Color(0xFFD84315),
                              onClick = { 
@@ -594,7 +608,7 @@ fun LifeGridScreen(
                          // 4. STICKER
                          ToolIcon(
                              icon = Icons.Default.EmojiEmotions,
-                             label = "Sticker",
+                             label = S.addSticker,
                              isActive = bgEditMode == WhiteboardMode.STICKER,
                              onClick = { 
                                  bgEditMode = WhiteboardMode.STICKER
@@ -614,7 +628,7 @@ fun LifeGridScreen(
                              contentColor = Color.White,
                              modifier = Modifier.size(48.dp)
                          ) {
-                             Icon(Icons.Default.Check, "Done")
+                             Icon(Icons.Default.Check, S.done)
                          }
                      }
                  }
@@ -631,7 +645,7 @@ fun LifeGridScreen(
                      containerColor = Color(0xFFE6DBC6),
                      contentColor = Color(0xFF5D4E3C)
                  ) {
-                     Icon(Icons.Default.Brush, "Edit Background")
+                     Icon(Icons.Default.Brush, S.editBackground)
                  }
              }
          }

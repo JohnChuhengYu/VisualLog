@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.visuallog.data.model.Sticker
 import com.visuallog.data.repository.RecentStickerManager
 import com.visuallog.engine.optimization.ImageOptimizationUtils
+import com.visuallog.i18n.S
 import com.visuallog.ui.common.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -204,7 +205,7 @@ fun RightToolDock(
             if (currentMode == WhiteboardMode.VIEW) {
                 FloatingActionIcon(
                     icon = Icons.Default.Edit,
-                    contentDescription = "Edit",
+                    contentDescription = S.edit,
                     onClick = { 
                         onModeChange(WhiteboardMode.DRAW)
                         onToolChange(WhiteboardTool.PEN) 
@@ -230,7 +231,7 @@ fun RightToolDock(
                         // 1. PEN
                         ToolIcon(
                             icon = Icons.Default.Edit,
-                            label = "Pen",
+                            label = S.pen,
                             isActive = currentTool == WhiteboardTool.PEN && currentMode == WhiteboardMode.DRAW,
                             activeColor = currentColor,
                             onClick = { onModeChange(WhiteboardMode.DRAW); onToolChange(WhiteboardTool.PEN) }
@@ -273,13 +274,13 @@ fun RightToolDock(
                             verticalArrangement = Arrangement.spacedBy(4.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text("Layer", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+                            Text(S.layer, style = MaterialTheme.typography.labelSmall, color = Color.Gray)
                             
                             (2 downTo 0).forEach { i ->
                                 val layerLabel = when (i) {
-                                    2 -> "Top"
-                                    1 -> "Mid"
-                                    else -> "Bot"
+                                    2 -> S.layerTop
+                                    1 -> S.layerMid
+                                    else -> S.layerBot
                                 }
                                 Box(
                                     modifier = Modifier
@@ -304,7 +305,7 @@ fun RightToolDock(
                         // 2. ERASER
                         ToolIcon(
                             icon = Icons.Default.AutoFixHigh, 
-                            label = "Eraser",
+                            label = S.eraser,
                             isActive = currentTool == WhiteboardTool.ERASER && currentMode == WhiteboardMode.DRAW,
                             activeColor = Color(0xFF8D6E63),
                             onClick = { onModeChange(WhiteboardMode.DRAW); onToolChange(WhiteboardTool.ERASER) }
@@ -313,7 +314,7 @@ fun RightToolDock(
                         // 3. SWEEP
                         ToolIcon(
                             icon = Icons.Default.DeleteSweep,
-                            label = "Sweep",
+                            label = S.sweep,
                             isActive = currentTool == WhiteboardTool.SEGMENT_ERASER && currentMode == WhiteboardMode.DRAW,
                             activeColor = Color(0xFFD84315), 
                             onClick = { onModeChange(WhiteboardMode.DRAW); onToolChange(WhiteboardTool.SEGMENT_ERASER) }
@@ -328,7 +329,7 @@ fun RightToolDock(
                         // 4. SELECT / EDIT TOOL
                         ToolIcon(
                             icon = Icons.Default.TouchApp, 
-                            label = "Select",
+                            label = S.select,
                             isActive = currentMode == WhiteboardMode.STICKER && !isStickerBoxOpen,
                             activeColor = Color(0xFF2196F3),
                             onClick = { 
@@ -340,7 +341,7 @@ fun RightToolDock(
                         // 5. ADD STICKER TOOL
                         ToolIcon(
                             icon = Icons.Default.EmojiEmotions, 
-                            label = "Add",
+                            label = S.addSticker,
                             isActive = isStickerBoxOpen,
                             activeColor = Color(0xFFFBC02D),
                             onClick = { 
@@ -362,7 +363,7 @@ fun RightToolDock(
                         // CLOSE / DONE
                         ToolIcon(
                             icon = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                            label = "Done",
+                            label = S.done,
                             isActive = false,
                             onClick = { onModeChange(WhiteboardMode.VIEW) },
                             activeColor = Color(0xFF5D4E3C),

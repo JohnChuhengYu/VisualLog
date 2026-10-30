@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.visuallog.i18n.S
 import com.visuallog.ui.common.FloatingActionIcon
 
 @Composable
@@ -29,7 +30,7 @@ fun FloatingHeader(
     ) {
         FloatingActionIcon(
             icon = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = "Back",
+            contentDescription = S.back,
             onClick = onBack,
             containerColor = Color(0xFFFAEBD7),
             contentColor = Color(0xFF5D4E3C)
@@ -37,14 +38,14 @@ fun FloatingHeader(
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             FloatingActionIcon(
                 icon = Icons.Default.Share,
-                contentDescription = "Export Polaroid Card",
+                contentDescription = S.export,
                 containerColor = Color(0xFFE6DBC6),
                 contentColor = Color(0xFF5D4E3C),
                 onClick = onExport
             )
             FloatingActionIcon(
                 icon = Icons.Default.Check,
-                contentDescription = "Save",
+                contentDescription = S.save,
                 containerColor = Color(0xFF5D4E3C),
                 contentColor = Color(0xFFF9F5F0),
                 onClick = onSave

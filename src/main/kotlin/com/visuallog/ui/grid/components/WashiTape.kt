@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.visuallog.i18n.S
 
 @Composable
 fun YearTapeSticker(year: Int, rotation: Float) {
@@ -86,7 +87,7 @@ fun JournalTitleSticker(
         
         Column {
             Text(
-                text = "My Journal",
+                text = S.myJournal,
                 style = MaterialTheme.typography.headlineMedium.copy(
                     fontFamily = FontFamily.Serif,
                     fontWeight = FontWeight.Bold,
@@ -96,7 +97,7 @@ fun JournalTitleSticker(
             )
             Spacer(Modifier.height(4.dp))
             Text(
-                text = "$totalDays Days",
+                text = S.daysCount(totalDays),
                 style = MaterialTheme.typography.labelLarge.copy(
                      fontFamily = FontFamily.Serif,
                      color = Color(0xFF8D6E63)

@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.visuallog.engine.snapshot.PolaroidCardExporter
+import com.visuallog.i18n.S
 import java.awt.image.BufferedImage
 import java.io.File
 
@@ -124,7 +125,7 @@ fun PolaroidExportModal(
 
                     // 2. Title & Typography
                     Text(
-                        text = "Polaroid Card Exported",
+                        text = S.exportCardTitle,
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontFamily = FontFamily.Serif,
                             fontWeight = FontWeight.Bold,
@@ -152,7 +153,7 @@ fun PolaroidExportModal(
                             modifier = Modifier.size(15.dp)
                         )
                         Text(
-                            text = if (copiedRecently) "Copied to clipboard, ready to share" else "Ready to share",
+                            text = if (copiedRecently) S.copiedToClipboard else S.readyToShare,
                             style = MaterialTheme.typography.labelMedium.copy(
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 12.sp,
@@ -164,7 +165,7 @@ fun PolaroidExportModal(
                     Spacer(modifier = Modifier.height(6.dp))
 
                     Text(
-                        text = "Paste directly into Messages, Instagram, Twitter / X, or Notes",
+                        text = S.shareSubtitle,
                         style = MaterialTheme.typography.bodySmall.copy(
                             fontSize = 11.sp,
                             color = Color(0xFF8C7E72)
@@ -234,7 +235,7 @@ fun PolaroidExportModal(
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text(
-                                    text = if (System.getProperty("os.name").lowercase().contains("mac")) "Show in Finder" else "Show in Folder",
+                                    text = if (System.getProperty("os.name").lowercase().contains("mac")) S.showInFinder else S.showInFolder,
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.Medium
                                 )
@@ -265,7 +266,7 @@ fun PolaroidExportModal(
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "Save Image to File...",
+                                text = S.saveImageToFile,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Medium
                             )
@@ -299,7 +300,7 @@ fun PolaroidExportModal(
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "Copy Again",
+                                text = S.copyAgain,
                                 fontSize = 13.sp,
                                 fontWeight = FontWeight.Medium
                             )
@@ -315,7 +316,7 @@ fun PolaroidExportModal(
                             )
                         ) {
                             Text(
-                                text = "Done",
+                                text = S.done,
                                 fontSize = 13.sp,
                                 fontWeight = FontWeight.Bold
                             )
@@ -339,7 +340,7 @@ fun PolaroidExportModal(
                     .padding(horizontal = 16.dp, vertical = 3.dp)
             ) {
                 Text(
-                    text = "✦ POLAROID CARD ✦",
+                    text = S.polaroidCardBadge,
                     style = MaterialTheme.typography.labelSmall.copy(
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Black,

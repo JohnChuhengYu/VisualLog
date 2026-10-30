@@ -24,6 +24,7 @@ import androidx.compose.ui.res.loadImageBitmap
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.visuallog.data.repository.RecentStickerManager
+import com.visuallog.i18n.S
 import com.visuallog.ui.common.alphaClickable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -66,7 +67,7 @@ fun StickerPickerBox(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "Sticker Box",
+                    S.stickerBox,
                     style = MaterialTheme.typography.labelLarge,
                     color = Color(0xFF795548)
                 )
@@ -79,7 +80,7 @@ fun StickerPickerBox(
                         .padding(2.dp),
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    listOf("Emoji", "Recent").forEachIndexed { index, title ->
+                    listOf(S.tabEmoji, S.tabRecent).forEachIndexed { index, title ->
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(6.dp))
@@ -190,7 +191,7 @@ fun StickerPickerBox(
                 ) {
                     Icon(Icons.Default.AddPhotoAlternate, null, modifier = Modifier.size(18.dp), tint = Color.White)
                     Spacer(Modifier.width(8.dp))
-                    Text("Import Photo", color = Color.White)
+                    Text(S.importPhoto, color = Color.White)
                 }
             }
         }

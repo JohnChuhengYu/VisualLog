@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.visuallog.i18n.S
 import com.visuallog.ui.common.StickerDefinitions
 import com.visuallog.ui.common.alphaClickable
 import kotlin.random.Random
@@ -50,7 +51,7 @@ fun TextJournalPage(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Daily Entry",
+                        text = S.dailyEntry,
                         style = MaterialTheme.typography.displaySmall.copy(
                             fontFamily = FontFamily.Serif,
                             fontWeight = FontWeight.Bold
@@ -60,7 +61,7 @@ fun TextJournalPage(
                     
                     Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                         StampControl(
-                            label = "Weather",
+                            label = S.weather,
                             currentValue = weather,
                             options = StickerDefinitions.WeatherOptions,
                             color = Color(0xFFD84315),
@@ -68,7 +69,7 @@ fun TextJournalPage(
                         )
                         
                         StampControl(
-                            label = "Mood",
+                            label = S.mood,
                             currentValue = mood,
                             options = StickerDefinitions.MoodOptions,
                             color = Color(0xFF1E88E5),
@@ -100,7 +101,7 @@ fun TextJournalPage(
                     ),
                     placeholder = { 
                         Text(
-                            "Write your thoughts...",
+                            S.writeYourStory,
                             style = MaterialTheme.typography.headlineSmall.copy(
                                 fontFamily = FontFamily.Serif
                             ),
