@@ -152,7 +152,7 @@ fun PolaroidExportModal(
                             modifier = Modifier.size(15.dp)
                         )
                         Text(
-                            text = if (copiedRecently) "已复制到剪贴板，随时可直接粘贴" else "已就绪",
+                            text = if (copiedRecently) "Copied to clipboard, ready to share" else "Ready to share",
                             style = MaterialTheme.typography.labelMedium.copy(
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 12.sp,
@@ -164,7 +164,7 @@ fun PolaroidExportModal(
                     Spacer(modifier = Modifier.height(6.dp))
 
                     Text(
-                        text = "支持直接在 微信 / 朋友圈 / 小红书 / 即刻 / X 粘贴发送",
+                        text = "Paste directly into Messages, Instagram, Twitter / X, or Notes",
                         style = MaterialTheme.typography.bodySmall.copy(
                             fontSize = 11.sp,
                             color = Color(0xFF8C7E72)
@@ -234,7 +234,7 @@ fun PolaroidExportModal(
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text(
-                                    text = "在访达中显示",
+                                    text = if (System.getProperty("os.name").lowercase().contains("mac")) "Show in Finder" else "Show in Folder",
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.Medium
                                 )
@@ -265,7 +265,7 @@ fun PolaroidExportModal(
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "另外保存为图片文件...",
+                                text = "Save Image to File...",
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Medium
                             )
@@ -299,7 +299,7 @@ fun PolaroidExportModal(
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "再次复制",
+                                text = "Copy Again",
                                 fontSize = 13.sp,
                                 fontWeight = FontWeight.Medium
                             )
@@ -315,7 +315,7 @@ fun PolaroidExportModal(
                             )
                         ) {
                             Text(
-                                text = "完成",
+                                text = "Done",
                                 fontSize = 13.sp,
                                 fontWeight = FontWeight.Bold
                             )
