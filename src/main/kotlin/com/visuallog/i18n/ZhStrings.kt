@@ -16,6 +16,8 @@ object ZhStrings : AppStrings {
     override val editBackground = "编辑桌面背景"
     override val doneEditing = "完成"
     override val selectImage = "选择图片"
+    override val showCards = "显示卡片"
+    override val hideCards = "隐藏卡片"
 
     override val pen = "画笔"
     override val eraser = "橡皮"

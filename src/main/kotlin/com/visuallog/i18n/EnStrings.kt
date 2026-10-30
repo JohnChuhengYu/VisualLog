@@ -16,6 +16,8 @@ object EnStrings : AppStrings {
     override val editBackground = "Edit Background"
     override val doneEditing = "Done"
     override val selectImage = "Select Image"
+    override val showCards = "Show Cards"
+    override val hideCards = "Hide Cards"
 
     override val pen = "Pen"
     override val eraser = "Eraser"

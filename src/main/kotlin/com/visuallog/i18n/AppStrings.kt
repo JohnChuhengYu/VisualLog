@@ -18,6 +18,8 @@ interface AppStrings {
     val editBackground: String
     val doneEditing: String
     val selectImage: String
+    val showCards: String
+    val hideCards: String
 
     // Whiteboard Tools
     val pen: String

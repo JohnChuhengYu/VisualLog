@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
@@ -80,6 +81,7 @@ fun LifeGridScreen(
     val (days, totalDays) = gridState
     
     var isEditBackgroundMode by remember { mutableStateOf(false) }
+    var showCardsOverlay by remember { mutableStateOf(false) }
     val bgState = GlobalBackgroundState
     val scope = rememberCoroutineScope()
     
@@ -164,96 +166,7 @@ fun LifeGridScreen(
                 }
             }
             
-            // 2. Interaction Layer for Drawing
-            if (isEditBackgroundMode) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .pointerInput(bgState.currentTool, bgEditMode) {
-                            if (bgEditMode != WhiteboardMode.DRAW) return@pointerInput
-                            awaitPointerEventScope {
-                                while (true) {
-                                    val event = awaitPointerEvent()
-                                    val type = event.type
-                                    val isDown = event.changes.any { it.pressed }
-                                    
-                                    if (isDown && (type == PointerEventType.Move || type == PointerEventType.Press)) {
-                                        val pos = event.changes.last().position
-                                        val nx = pos.x / canvasWidth
-                                        val ny = pos.y / canvasHeight
-                                        
-                                        bgState.inputManager.onRawPoint(RawPoint(nx, ny, event.changes.last().uptimeMillis))
-                                        bgState.strokeEngine.process(event.changes.map { 
-                                            RawPoint(it.position.x / canvasWidth, it.position.y / canvasHeight, it.uptimeMillis) 
-                                        })
-                                        invalidator++
-                                    }
-                                    
-                                    if (type == PointerEventType.Release) {
-                                        val path = bgState.strokeEngine.getFinalPath()
-                                        if (!path.isEmpty) {
-                                            if (bgState.currentTool == WhiteboardTool.SEGMENT_ERASER) {
-                                                val eraserPoints = bgState.strokeEngine.rawPoints.map { Offset(it.x, it.y) }
-                                                
-                                                if (eraserPoints.size >= 2) {
-                                                    val eraserSegments = eraserPoints.windowed(2) { (a, b) -> a to b }
-                                                    val eraserBounds = Rect(
-                                                        eraserPoints.minOf { it.x }, eraserPoints.minOf { it.y },
-                                                        eraserPoints.maxOf { it.x }, eraserPoints.maxOf { it.y }
-                                                    ).inflate(0.01f)
-                                                    
-                                                    val toRemove = bgState.strokes.filter { s ->
-                                                        s.layer == selectedLayer && !s.isEraser
-                                                    }.filter { s ->
-                                                        if (s.points.size < 2) return@filter false
-                                                        if (!eraserBounds.overlaps(s.bounds)) return@filter false
-                                                        
-                                                        val strokeSegments = s.points.windowed(2) { (a, b) -> a to b }
-                                                        strokeSegments.any { sSeg ->
-                                                            eraserSegments.any { eSeg ->
-                                                                GeometryUtils.lineSegmentsIntersect(sSeg.first, sSeg.second, eSeg.first, eSeg.second)
-                                                            }
-                                                        }
-                                                    }
-                                                    
-                                                    if (toRemove.isNotEmpty()) {
-                                                        bgState.strokes.removeAll(toRemove)
-                                                        bgState.layerManager.restoreFromPaths(bgState.strokes)
-                                                    }
-                                                }
-                                                bgState.strokeEngine.clear()
-                                                invalidator++
-                                            } else {
-                                                val style = bgState.strokeEngine.currentStyle
-                                                val baseColor = if (bgState.currentTool == WhiteboardTool.ERASER) Color.White else bgState.currentStrokeColor
-                                                val finalColor = if (bgState.isMarkerMode && bgState.currentTool != WhiteboardTool.ERASER) baseColor.copy(alpha = 0.4f) else baseColor
-                                                val bm = if (bgState.currentTool == WhiteboardTool.ERASER) androidx.compose.ui.graphics.BlendMode.Clear else androidx.compose.ui.graphics.BlendMode.SrcOver
-                                                val isEraser = bgState.currentTool == WhiteboardTool.ERASER
-                                                
-                                                bgState.layerManager.bakeStroke(path, style, finalColor, bm, selectedLayer)
-                                                
-                                                val savedPoints = bgState.strokeEngine.rawPoints.map { Offset(it.x, it.y) }
-                                                bgState.strokes.add(
-                                                    Stroke(
-                                                        points = savedPoints,
-                                                        isEraser = isEraser,
-                                                        width = bgState.strokeEngine.strokeWidth,
-                                                        color = if (isEraser) 0 else finalColor.toArgb(),
-                                                        layer = selectedLayer
-                                                    )
-                                                )
-                                                bgState.strokeEngine.clear()
-                                                invalidator++
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                )
-            }
-            
-            // 3. Stickers Layer
+            // 2. Stickers Layer
             for (layerId in 0..2) {
                 Box(modifier = Modifier.fillMaxSize()) {
                     bgState.stickers.filter { it.layer == layerId }.forEach { sticker ->
@@ -290,11 +203,22 @@ fun LifeGridScreen(
         }
         
         // --- LAYER 2: INTERACTIVE CONTENT GRID ---
-        Box(modifier = Modifier.fillMaxSize()) {
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 135.dp),
-                state = scrollState,
-                modifier = Modifier.fillMaxSize(),
+        AnimatedVisibility(
+            visible = !isEditBackgroundMode || showCardsOverlay,
+            enter = fadeIn(),
+            exit = fadeOut(),
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = if (isEditBackgroundMode) 0.35f else 1f }
+            ) {
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(minSize = 135.dp),
+                    state = scrollState,
+                    userScrollEnabled = !isEditBackgroundMode,
+                    modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(
                     start = 36.dp, 
                     end = 36.dp, 
@@ -398,13 +322,107 @@ fun LifeGridScreen(
                 }
             }
         }
+    }
         
-        // --- LAYER 3: FIXED FLOATING TITLE ---
-        if (!isNarrow) {
+        // --- LAYER 2B: DRAWING INTERACTION (WHEN EDITING BACKGROUND) ---
+        if (isEditBackgroundMode && bgEditMode == WhiteboardMode.DRAW) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(start = 32.dp, top = 28.dp),
+                    .pointerInput(bgState.currentTool) {
+                        awaitPointerEventScope {
+                            while (true) {
+                                val event = awaitPointerEvent()
+                                val type = event.type
+                                val isDown = event.changes.any { it.pressed }
+                                
+                                if (isDown && (type == PointerEventType.Move || type == PointerEventType.Press)) {
+                                    val pos = event.changes.last().position
+                                    val nx = pos.x / canvasWidth
+                                    val ny = pos.y / canvasHeight
+                                    
+                                    bgState.inputManager.onRawPoint(RawPoint(nx, ny, event.changes.last().uptimeMillis))
+                                    bgState.strokeEngine.process(event.changes.map { 
+                                        RawPoint(it.position.x / canvasWidth, it.position.y / canvasHeight, it.uptimeMillis) 
+                                    })
+                                    invalidator++
+                                }
+                                
+                                if (type == PointerEventType.Release) {
+                                    val path = bgState.strokeEngine.getFinalPath()
+                                    if (!path.isEmpty) {
+                                        if (bgState.currentTool == WhiteboardTool.SEGMENT_ERASER) {
+                                            val eraserPoints = bgState.strokeEngine.rawPoints.map { Offset(it.x, it.y) }
+                                            
+                                            if (eraserPoints.size >= 2) {
+                                                val eraserSegments = eraserPoints.windowed(2) { (a, b) -> a to b }
+                                                val eraserBounds = Rect(
+                                                    eraserPoints.minOf { it.x }, eraserPoints.minOf { it.y },
+                                                    eraserPoints.maxOf { it.x }, eraserPoints.maxOf { it.y }
+                                                ).inflate(0.01f)
+                                                
+                                                val toRemove = bgState.strokes.filter { s ->
+                                                    s.layer == selectedLayer && !s.isEraser
+                                                }.filter { s ->
+                                                    if (s.points.size < 2) return@filter false
+                                                    if (!eraserBounds.overlaps(s.bounds)) return@filter false
+                                                    
+                                                    val strokeSegments = s.points.windowed(2) { (a, b) -> a to b }
+                                                    strokeSegments.any { sSeg ->
+                                                        eraserSegments.any { eSeg ->
+                                                            GeometryUtils.lineSegmentsIntersect(sSeg.first, sSeg.second, eSeg.first, eSeg.second)
+                                                        }
+                                                    }
+                                                }
+                                                
+                                                if (toRemove.isNotEmpty()) {
+                                                    bgState.strokes.removeAll(toRemove)
+                                                    bgState.layerManager.restoreFromPaths(bgState.strokes)
+                                                }
+                                            }
+                                            bgState.strokeEngine.clear()
+                                            invalidator++
+                                        } else {
+                                            val style = bgState.strokeEngine.currentStyle
+                                            val baseColor = if (bgState.currentTool == WhiteboardTool.ERASER) Color.White else bgState.currentStrokeColor
+                                            val finalColor = if (bgState.isMarkerMode && bgState.currentTool != WhiteboardTool.ERASER) baseColor.copy(alpha = 0.4f) else baseColor
+                                            val bm = if (bgState.currentTool == WhiteboardTool.ERASER) androidx.compose.ui.graphics.BlendMode.Clear else androidx.compose.ui.graphics.BlendMode.SrcOver
+                                            val isEraser = bgState.currentTool == WhiteboardTool.ERASER
+                                            
+                                            bgState.layerManager.bakeStroke(path, style, finalColor, bm, selectedLayer)
+                                            
+                                            val savedPoints = bgState.strokeEngine.rawPoints.map { Offset(it.x, it.y) }
+                                            bgState.strokes.add(
+                                                Stroke(
+                                                    points = savedPoints,
+                                                    isEraser = isEraser,
+                                                    width = bgState.strokeEngine.strokeWidth,
+                                                    color = if (isEraser) 0 else finalColor.toArgb(),
+                                                    layer = selectedLayer
+                                                )
+                                            )
+                                            bgState.strokeEngine.clear()
+                                            invalidator++
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+            )
+        }
+        
+        // --- LAYER 3: FIXED FLOATING TITLE ---
+        AnimatedVisibility(
+            visible = !isNarrow && !isEditBackgroundMode,
+            enter = fadeIn(),
+            exit = fadeOut(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 32.dp, top = 28.dp)
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.TopStart
             ) {
                 JournalTitleSticker(
@@ -616,13 +634,25 @@ fun LifeGridScreen(
                              }
                          )
 
-                         // 5. DONE
+                         // 5. TOGGLE CARDS OVERLAY (Ghost Reference)
+                         HorizontalDivider(modifier = Modifier.width(32.dp))
+                         ToolIcon(
+                             icon = if (showCardsOverlay) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                             label = if (showCardsOverlay) S.hideCards else S.showCards,
+                             isActive = showCardsOverlay,
+                             onClick = { 
+                                 showCardsOverlay = !showCardsOverlay 
+                             }
+                         )
+
+                         // 6. DONE
                          HorizontalDivider(modifier = Modifier.width(32.dp))
                          FloatingActionButton(
                              onClick = { 
                                  bgState.save()
                                  isEditBackgroundMode = false
                                  isStickerBoxOpen = false 
+                                 showCardsOverlay = false
                              },
                              containerColor = Color(0xFF5D4E3C),
                              contentColor = Color.White,
@@ -641,7 +671,7 @@ fun LifeGridScreen(
                  contentAlignment = Alignment.BottomEnd
              ) {
                  FloatingActionButton(
-                     onClick = { isEditBackgroundMode = true },
+                     onClick = { isEditBackgroundMode = true; showCardsOverlay = false },
                      containerColor = Color(0xFFE6DBC6),
                      contentColor = Color(0xFF5D4E3C)
                  ) {
