@@ -48,7 +48,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "VisualLog"
-            packageVersion = "1.0.1"
+            packageVersion = "1.0.2"
             modules("java.sql", "java.desktop")
         }
         buildTypes.release.proguard {

@@ -125,24 +125,13 @@ object PolaroidCardExporter {
         val photoY = cardMarginY + photoPadding
         val photoSize = cardW - (photoPadding * 2) // 848 x 848 (Square Polaroid Canvas)
 
-        // Clean White Photo Paper Background
-        g.color = java.awt.Color(0xFF, 0xFD, 0xF9)
+        // Warm Retro Photo Paper Background (#F5EFE6 - Contrast with White Card)
+        g.color = java.awt.Color(0xF5, 0xEF, 0xE6)
         g.fillRect(photoX, photoY, photoSize, photoSize)
-        g.color = java.awt.Color(0xEE, 0xEA, 0xE2)
-        g.stroke = BasicStroke(1.0f)
-        g.drawRect(photoX, photoY, photoSize, photoSize)
 
-        // Draw Content Image (From rendered thumbnail or freshly baked buffer)
+        // Draw Content Image (Prioritize fresh high-res buffer from layerManager, fallback to thumbnail file)
         var contentImg: BufferedImage? = null
-        if (thumbnailFile != null && thumbnailFile.exists()) {
-            try {
-                contentImg = ImageIO.read(thumbnailFile)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-        
-        if (contentImg == null && layerManager != null) {
+        if (layerManager != null) {
             try {
                 val paddedBitmap = layerManager.generatePaddedThumbnail(
                     paths = strokes,
@@ -180,10 +169,28 @@ object PolaroidCardExporter {
                 e.printStackTrace()
             }
         }
+        
+        if (contentImg == null && thumbnailFile != null && thumbnailFile.exists()) {
+            try {
+                contentImg = ImageIO.read(thumbnailFile)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
 
         if (contentImg != null) {
             g.drawImage(contentImg, photoX, photoY, photoSize, photoSize, null)
         }
+
+        // Inner Photo Die-Cut Frame Bezel & Inset Shadow (#DDD4C5)
+        g.color = java.awt.Color(0xDD, 0xD4, 0xC5)
+        g.stroke = BasicStroke(2.0f)
+        g.drawRect(photoX, photoY, photoSize, photoSize)
+
+        // Delicate Top & Left Inset Shadow (Physical cut-out depth)
+        g.color = java.awt.Color(35, 25, 15, 22)
+        g.fillRect(photoX, photoY, photoSize, 3)
+        g.fillRect(photoX, photoY, 3, photoSize)
 
         // 4. Weekday Tape Sticker (Top-Right of Photo)
         val dateObj = try { LocalDate.parse(dayEntry.date) } catch (e: Exception) { LocalDate.now() }

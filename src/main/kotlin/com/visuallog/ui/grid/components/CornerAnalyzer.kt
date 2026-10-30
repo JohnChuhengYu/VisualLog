@@ -43,6 +43,7 @@ object ThumbnailCache {
     
     fun get(path: String): ThumbnailInfo? = cache[path]
     fun put(path: String, info: ThumbnailInfo) { cache[path] = info }
+    fun clear() { cache.clear() }
 }
 
 @Composable

@@ -27,6 +27,17 @@ class VisualLogRepository {
         }
     }
 
+    fun getAllDayEntries(): List<DayEntry> {
+        return transaction {
+            DayEntries.selectAll().map { row ->
+                val id = row[DayEntries.id].value
+                val stickers = Stickers.select { Stickers.dayEntryId eq id }
+                    .map { it.toSticker() }
+                row.toDayEntry(stickers)
+            }
+        }
+    }
+
     fun saveOrUpdateDayEntry(
         date: String, 
         backgroundPath: String?, 

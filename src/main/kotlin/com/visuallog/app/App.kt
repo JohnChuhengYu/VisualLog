@@ -11,12 +11,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.visuallog.data.model.DayEntry
 import com.visuallog.data.repository.VisualLogRepository
+import com.visuallog.data.service.ThumbnailMigrator
 import com.visuallog.ui.grid.GlobalBackgroundState
 import com.visuallog.ui.grid.LifeGridScreen
 import com.visuallog.ui.whiteboard.WhiteboardScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -41,6 +43,10 @@ fun App(
 
         // Load initialization date and timeline entries
         LaunchedEffect(forceReloadTrigger) {
+            withContext(Dispatchers.IO) {
+                ThumbnailMigrator.migrateIfNeeded(repository)
+            }
+
             if (startDate == null) {
                 startDate = repository.getOrCreateInitDate()
             }
