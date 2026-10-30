@@ -4,7 +4,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -17,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
@@ -32,6 +32,7 @@ fun LanguageSwitchButton(modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
     val current = LanguageManager.currentLanguage
     val effective = LanguageManager.effectiveLanguage
+    val density = LocalDensity.current
 
     val currentLabel = remember(current, effective) {
         when (current) {
@@ -46,14 +47,14 @@ fun LanguageSwitchButton(modifier: Modifier = Modifier) {
         Surface(
             shape = RoundedCornerShape(20.dp),
             color = Color(0xFFFFFDF9), // Warm antique paper
-            shadowElevation = 6.dp,
+            shadowElevation = 4.dp,
             border = BorderStroke(1.dp, Color(0xFFDFD5C5)),
             modifier = Modifier
                 .shadow(
-                    elevation = 6.dp,
+                    elevation = 4.dp,
                     shape = RoundedCornerShape(20.dp),
-                    spotColor = Color(0x354A3E31),
-                    ambientColor = Color(0x154A3E31)
+                    spotColor = Color(0x304A3E31),
+                    ambientColor = Color(0x104A3E31)
                 )
                 .clip(RoundedCornerShape(20.dp))
                 .clickable { expanded = !expanded }
@@ -90,48 +91,36 @@ fun LanguageSwitchButton(modifier: Modifier = Modifier) {
 
         // Custom Vintage Paper Dropdown Menu Card
         if (expanded) {
+            val popupOffsetY = with(density) { 46.dp.roundToPx() }
+
             Popup(
                 alignment = Alignment.TopEnd,
-                offset = IntOffset(0, 46),
+                offset = IntOffset(0, popupOffsetY),
                 onDismissRequest = { expanded = false },
                 properties = PopupProperties(focusable = true)
             ) {
                 Surface(
-                    shape = RoundedCornerShape(18.dp),
+                    shape = RoundedCornerShape(20.dp),
                     color = Color(0xFFFFFDF9),
                     shadowElevation = 18.dp,
                     border = BorderStroke(1.dp, Color(0xFFE5DDD0)),
                     modifier = Modifier
-                        .width(220.dp)
+                        .width(230.dp)
                         .shadow(
                             elevation = 18.dp,
-                            shape = RoundedCornerShape(18.dp),
-                            spotColor = Color(0x403A2E20),
-                            ambientColor = Color(0x253A2E20)
+                            shape = RoundedCornerShape(20.dp),
+                            spotColor = Color(0x383A2E20),
+                            ambientColor = Color(0x203A2E20)
                         )
-                        .clip(RoundedCornerShape(18.dp))
+                        .clip(RoundedCornerShape(20.dp))
                 ) {
                     Column(
-                        modifier = Modifier.padding(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                        modifier = Modifier.padding(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        // Header label
-                        Text(
-                            text = "LANGUAGE / 语言",
-                            style = MaterialTheme.typography.labelSmall.copy(
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 10.sp,
-                                letterSpacing = 1.sp,
-                                color = Color(0xFF9E8F82)
-                            ),
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
-                        )
-
                         // 1. Auto / Follow System
                         LanguageMenuItem(
-                            title = "Auto / 跟随系统",
-                            subtitle = if (effective == AppLanguage.CHINESE) "当前检测: 中文" else "Detected: English",
+                            title = "Auto (跟随系统)",
                             isSelected = current == AppLanguage.SYSTEM,
                             onClick = {
                                 LanguageManager.setLanguage(AppLanguage.SYSTEM)
@@ -142,7 +131,6 @@ fun LanguageSwitchButton(modifier: Modifier = Modifier) {
                         // 2. English
                         LanguageMenuItem(
                             title = "English",
-                            subtitle = "English Interface",
                             isSelected = current == AppLanguage.ENGLISH,
                             onClick = {
                                 LanguageManager.setLanguage(AppLanguage.ENGLISH)
@@ -153,7 +141,6 @@ fun LanguageSwitchButton(modifier: Modifier = Modifier) {
                         // 3. 简体中文
                         LanguageMenuItem(
                             title = "简体中文",
-                            subtitle = "中文界面",
                             isSelected = current == AppLanguage.CHINESE,
                             onClick = {
                                 LanguageManager.setLanguage(AppLanguage.CHINESE)
@@ -170,58 +157,41 @@ fun LanguageSwitchButton(modifier: Modifier = Modifier) {
 @Composable
 private fun LanguageMenuItem(
     title: String,
-    subtitle: String,
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
     val bgColor = if (isSelected) Color(0xFFF3ECE0) else Color.Transparent
-    val textColor = if (isSelected) Color(0xFF4A3828) else Color(0xFF5D4E3C)
-    val subtitleColor = if (isSelected) Color(0xFF7D6855) else Color(0xFF9E8F82)
+    val textColor = if (isSelected) Color(0xFF4A3828) else Color(0xFF6B5846)
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
+            .height(44.dp)
+            .clip(RoundedCornerShape(14.dp))
             .background(bgColor)
             .clickable(onClick = onClick)
-            .padding(horizontal = 10.dp, vertical = 8.dp),
+            .padding(horizontal = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontFamily = FontFamily.Serif,
-                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                    fontSize = 13.sp,
-                    color = textColor
-                )
+        Text(
+            text = title,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontFamily = FontFamily.Serif,
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                fontSize = 13.5.sp,
+                color = textColor,
+                letterSpacing = 0.2.sp
             )
-            Text(
-                text = subtitle,
-                style = MaterialTheme.typography.labelSmall.copy(
-                    fontSize = 10.sp,
-                    color = subtitleColor
-                )
-            )
-        }
+        )
 
         if (isSelected) {
-            Box(
-                modifier = Modifier
-                    .size(20.dp)
-                    .clip(CircleShape)
-                    .background(Color(0xFF5D4E3C)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Check,
-                    contentDescription = null,
-                    tint = Color(0xFFFFFDF9),
-                    modifier = Modifier.size(12.dp)
-                )
-            }
+            Icon(
+                imageVector = Icons.Default.Check,
+                contentDescription = null,
+                tint = Color(0xFF5D4E3C),
+                modifier = Modifier.size(18.dp)
+            )
         }
     }
 }
