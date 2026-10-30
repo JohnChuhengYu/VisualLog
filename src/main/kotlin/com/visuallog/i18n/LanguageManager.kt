@@ -61,3 +61,4 @@ object LanguageManager {
  */
 val S: AppStrings
     get() = LanguageManager.strings
+

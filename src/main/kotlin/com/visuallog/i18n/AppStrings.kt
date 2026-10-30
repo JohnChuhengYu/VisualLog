@@ -59,3 +59,4 @@ interface AppStrings {
     val language: String
     val followSystem: String
 }
+

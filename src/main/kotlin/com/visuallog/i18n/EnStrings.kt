@@ -52,3 +52,4 @@ object EnStrings : AppStrings {
     override val language = "Language"
     override val followSystem = "Follow System"
 }
+

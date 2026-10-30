@@ -17,7 +17,6 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import com.visuallog.app.App
 import com.visuallog.app.DebugStartDateDialog
-import com.visuallog.app.FPSCounter
 import com.visuallog.data.local.DatabaseFactory
 import com.visuallog.data.repository.VisualLogRepository
 import java.time.LocalDate
@@ -87,11 +86,6 @@ fun main() {
                     startDateState = startDateState,
                     forceReloadTriggerState = forceReloadTriggerState
                 )
-                
-                // Real-time FPS Monitor Overlay
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopEnd) {
-                    FPSCounter()
-                }
             }
         }
     }

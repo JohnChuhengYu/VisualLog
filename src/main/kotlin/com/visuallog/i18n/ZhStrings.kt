@@ -52,3 +52,4 @@ object ZhStrings : AppStrings {
     override val language = "语言"
     override val followSystem = "跟随系统"
 }
+

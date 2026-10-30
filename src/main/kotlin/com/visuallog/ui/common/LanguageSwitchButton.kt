@@ -107,3 +107,4 @@ fun LanguageSwitchButton(modifier: Modifier = Modifier) {
         }
     }
 }
+
