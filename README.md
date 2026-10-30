@@ -7,7 +7,7 @@
   <p><em>Turn your daily moments into tactile, interactive Polaroid collages — 100% offline and private.</em></p>
 
   <p>
-    <a href="https://github.com/JohnChuhengYu/VisualLog/releases"><img src="https://img.shields.io/github/v/release/JohnChuhengYu/VisualLog?color=5D4E3C&label=download&logo=github" alt="Download"></a>
+    <a href="https://github.com/JohnChuhengYu/VisualLog/releases"><img src="https://img.shields.io/badge/download-v1.0.3-5D4E3C?logo=github" alt="Download"></a>
     <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-E6DBC6?logo=apple" alt="Platforms">
     <img src="https://img.shields.io/badge/Kotlin-1.9.22-7F52FF?logo=kotlin" alt="Kotlin">
     <img src="https://img.shields.io/badge/Compose-Multiplatform-4285F4?logo=jetpackcompose" alt="Compose Multiplatform">
