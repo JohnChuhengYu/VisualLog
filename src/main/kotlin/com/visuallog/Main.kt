@@ -13,6 +13,7 @@ import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import com.visuallog.app.App
@@ -34,7 +35,11 @@ fun main() {
         val startDateState = remember { mutableStateOf<LocalDate?>(null) }
         val forceReloadTriggerState = remember { mutableStateOf(0) }
 
-        Window(onCloseRequest = ::exitApplication, title = "Visual Life Log") {
+        Window(
+            onCloseRequest = ::exitApplication,
+            title = "Visual Life Log",
+            icon = painterResource("icons/icon.png")
+        ) {
             var showDebugDialog by remember { mutableStateOf(false) }
             var debugClickCount by remember { mutableStateOf(0) }
             var lastDebugPressTime by remember { mutableStateOf(0L) }

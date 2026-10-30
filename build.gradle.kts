@@ -48,8 +48,21 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "VisualLog"
-            packageVersion = "1.0.2"
+            packageVersion = "1.0.3"
             modules("java.sql", "java.desktop")
+
+            macOS {
+                iconFile.set(project.file("src/main/resources/icons/icon.icns"))
+                bundleID = "com.visuallog.app"
+            }
+            windows {
+                iconFile.set(project.file("src/main/resources/icons/icon.ico"))
+                menuGroup = "VisualLog"
+                upgradeUuid = "8b14e365-5c12-4d2b-92ea-2c8b74681a9f"
+            }
+            linux {
+                iconFile.set(project.file("src/main/resources/icons/icon.png"))
+            }
         }
         buildTypes.release.proguard {
             configurationFiles.from(project.file("compose-desktop.pro"))
